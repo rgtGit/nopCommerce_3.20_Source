@@ -1,0 +1,15 @@
+﻿@using PayJS_Security
+@using Newtonsoft.Json;
+@{
+    string resp = new StreamReader(Request.InputStream).ReadToEnd();
+
+    var results = new
+    {
+        hash = Shared.GetHmac(resp, Shared.DeveloperKEY),
+    };
+
+    string returnJson = JsonConvert.SerializeObject(results);
+
+    HttpContext.Current.Response.ContentType = "text/json";
+    HttpContext.Current.Response.Write(returnJson);
+}

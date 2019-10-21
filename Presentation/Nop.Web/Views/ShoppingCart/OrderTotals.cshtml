@@ -1,0 +1,62 @@
+﻿@model OrderTotalsModel
+@using Nop.Web.Models.ShoppingCart;
+
+<div class="row">
+    <div class="col-md-8"></div>
+    <div class="col-md-4">
+        <table class="table" id="checkout">
+            <tr>
+                <td style="text-align:right">SubTotal:</td>
+                <td style="text-align:right">@Model.SubTotal</td>
+            </tr>
+            @if (!String.IsNullOrEmpty(Model.SubTotalDiscount))
+            {
+                <tr>
+                    <td style="text-align:right">Discount:</td>
+                    <td style="text-align:right">@Model.SubTotalDiscount</td>
+                </tr>
+            }
+
+            @if (Model.IsDropShipped)
+            {
+                <tr>
+                    <td style="text-align:right">
+                        Drop Ship Charge:
+                    </td>
+                    <td style="text-align:right">@Model.DropShipCharge</td>
+                </tr>
+
+            }
+            @if (Model.Shipping_raw > 0)
+            {
+                <tr>
+                    <td style="text-align:right">
+                        Shipping Charge:
+                    </td>
+                    <td style="text-align:right">@Model.Shipping</td>
+                </tr>
+
+            }
+            <tr class="green-checkout">
+                <td style="text-align:right">Order Total:</td>
+                <td style="text-align:right">@Model.OrderTotal</td>
+            </tr>
+
+            @if (Model.IsEditable)
+            {
+                <tr>
+                    <td>
+                        <input type="submit" name="updatecart" value="Update Cart" class="btn btn-lg btn-primary" />
+                    </td>
+                    <td>
+                        <button type="submit" id="checkout" name="checkout" value="checkout" class="btn btn-lg btn-success">Checkout ></button>
+
+                    </td>
+                </tr>
+
+            }
+
+        </table>
+    </div>
+</div>
+</div>

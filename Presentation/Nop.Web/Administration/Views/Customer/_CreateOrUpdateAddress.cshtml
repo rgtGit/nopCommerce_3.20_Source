@@ -1,0 +1,17 @@
+﻿@model CustomerAddressModel
+           
+@^@Html.EditorFor(model => model.Address, "Address")^@
+
+   <div class="inputs">
+        <label for="BillingNewAddress_FirstName">First name:</label>
+            <input class="text-box single-line" data-val="true" data-val-required="First name is required." id="BillingNewAddress_FirstName" name="BillingNewAddress.FirstName" type="text" value="John" />
+        <span class="required">*</span>
+        <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.FirstName" data-valmsg-replace="true"></span>
+    </div>
+    <div class="inputs">
+        <label for="BillingNewAddress_LastName">Last name:</label>
+            <input class="text-box single-line" data-val="true" data-val-required="Last name is required." id="BillingNewAddress_LastName" name="BillingNewAddress.LastName" type="text" value="Smith" />
+        <span class="required">*</span>
+        <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.LastName" data-valmsg-replace="true"></span>
+
+    </div>

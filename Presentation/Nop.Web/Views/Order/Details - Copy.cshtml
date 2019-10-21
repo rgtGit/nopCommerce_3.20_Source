@@ -1,0 +1,221 @@
+﻿@model OrderDetailsModel
+@using Nop.Web.Models.Order;
+
+@{
+
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts("Master Spas Parts");
+}
+
+@Html.Partial("~/Views/Shared/header_nav.cshtml")
+<table class="wrapper" style="margin: 0;background: #fff;border: 0;width: 100%;text-align: center;">
+    <tbody>
+        <tr>
+            <td class="box box-ext order-summary-box" style="background: #fff;padding: 0 25px;text-align: center;">
+                <table class="two-col ledger" style="margin: 0 auto;font-size: 14px;line-height: 22px;width: 546px;text-align: left;">
+                    <tbody>
+                        <tr>
+                            <td class="em-spacer-1" style="height: 26px;">
+                                <b>Order ID: </b>@Html.Raw("P")@Model.Id<br>
+                                @if (!Model.PONumber.IsEmpty()) {
+                                    <b>Customer PO: </b>@Model.PONumber<br>
+                                }
+                                <b>Ship Via: </b>@Model.ShipVia<br>
+                                <b>Desired Ship Date: </b>@Model.DesiredShipDate<br>
+                                <b>Payment Type: </b>@Model.PaymentMethod;
+                                <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="em-spacer-1" style="height: 26px;"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table align="left" class="column column-1" style="margin: 0 auto;width: 270px;">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <strong class="title" style="text-transform: uppercase;display: block;margin-bottom: 5px;">
+                                                    Billing Address
+                                                </strong>
+                                                @Model.BillingAddress.Company <br>
+                                                @Model.BillingAddress.Address1 <br>
+
+                                                @if (!Model.BillingAddress.Address2.IsEmpty())
+                                                {
+                                                    @Model.BillingAddress.Address2
+                                                    <br>
+                                                }
+
+                                                @Model.BillingAddress.CityStateZip <br>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table align="left" class="column column-2" style="margin: 0 auto;width: 270px;">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <strong class="title" style="text-transform: uppercase;display: block;margin-bottom: 5px;">
+                                                    Shipping Address
+                                                </strong>
+                                                @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName  <br>
+                                                @Model.ShippingAddress.Address1 <br>
+
+                                                
+                                                @if (!Model.ShippingAddress.Address2.IsEmpty())
+                                                {
+                                                    @Model.ShippingAddress.Address2
+                                                    <br>
+                                                }
+
+                                                @Model.ShippingAddress.CityStateZip <br>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <table class="order-summary" style="margin: 0 auto;text-align: left;width: 546px;border-top: 2px solid #eee;">
+                    <tbody>
+                        <tr>
+                            <td class="em-spacer-0" style="height: 20px;"></td>
+                        </tr>
+
+                        <!--START PRODUCT LIST (ADD new products by copying the .line-item block)--->
+                        @foreach (var item in Model.Items)
+                        {
+                        <tr class="line-item">
+                            <td class="line-item product-thumb-column" style="width: 80px;">
+                                <img class="product-thumb" height="80" width="80" src=@("/parts/content/images/thumbs/" + item.Sku + ".jpg") style="width: 80px;height: 80px;">
+                                <div class="row-spacer" style="height: 8px;"></div>
+                            </td>
+                            <td class="line-item product-info-column" style="width: 250px;">
+                                <div class="title" style="margin-bottom: 5px;">
+                                    @(item.Sku + " - " + item.ProductName)
+                                </div>
+                                <div class="sub" style="font-size: 13px;margin-bottom: 3px;">
+                                   @item.FullDescription
+                                </div>
+                                <div class="sub" style="font-size: 13px;margin-bottom: 3px;">
+                                    Qty: @item.Quantity
+                                </div>
+                            </td>
+                            <td class="line-item product-price-column" style="width: 100px;text-align: right;vertical-align: top;">
+                                <div class="sub price" style="font-size: 13px;margin-bottom: 3px;margin-top: 18px;">
+                                    @item.Quantity X @item.UnitPrice
+                                </div>
+                                <div class="ships-by-message" style="font-size: 13px;padding-top: 4px;">
+                                    <strong style="font-weight: 400;">
+                                        @item.
+                                    </strong>
+                                </div>
+                                <div class="ships-by-message" style="font-size: 13px;padding-top: 4px;">
+                                    <strong style="font-weight: 400;">
+                                        {{TOTAL PRICE}}
+                                    </strong>
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                        <!--END PRODUCT LIST--->
+
+                        <tr>
+                            <td class="em-spacer-0" style="height: 20px;"></td>
+                        </tr>
+                        <tr>
+                            <td class="divider" colspan="3" style="border-bottom: 2px solid #eee;"></td>
+                        </tr>
+                        <tr>
+                            <td class="em-spacer-1" style="height: 26px;"></td>
+                        </tr>
+
+                        <!-- TOTAL PRICE CALCULATION BLOCK -->
+                        <tr class="total-row" style="font-size: 14px;">
+                            <td class="copy" colspan="2" style="text-align: right;">
+                                Subtotal
+                            </td>
+                            <td class="value" style="text-align: right;">
+                                $950.00
+                            </td>
+                        </tr>
+                        <tr class="total-row" style="font-size: 14px;">
+                            <td class="copy" colspan="2" style="text-align: right;">
+                                Drop Ship Charge
+                            </td>
+                            <td class="value" style="text-align: right;">
+                                $75.00
+                            </td>
+                        </tr>
+                        <tr class="total-row" style="font-size: 14px;">
+                            <td class="copy" colspan="2" style="text-align: right;">
+                                Shipping
+                            </td>
+                            <td class="value" style="text-align: right;">
+                                $0.00
+                            </td>
+                        </tr>
+                        <tr class="total-row total" style="font-size: 14px;">
+                            <td class="copy" colspan="2" style="text-align: right;padding-top: 10px;">
+                                <strong>
+                                    Total
+                                </strong>
+                            </td>
+                            <td class="value" style="text-align: right;padding-top: 10px;">
+                                <strong>
+                                    $1,174.04
+                                </strong>
+                            </td>
+                        </tr>
+                        <!-- END TOTAL PRICE CALCULATION BLOCK -->
+
+
+
+                        <tr>
+                            <td class="em-spacer-0" style="height: 20px;"></td>
+                        </tr>
+                        <tr>
+                            <td class="divider" colspan="3" style="border-bottom: 2px solid #eee;"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="em-spacer-2" style="height: 52px;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="em-spacer-1" style="height: 26px;"></td>
+        </tr>
+
+
+
+
+    </tbody>
+</table>
+<table style="margin: 0 auto;">
+    <tbody>
+        <tr>
+            <td class="em-spacer-2" style="height: 52px;"></td>
+        </tr>
+        <tr>
+            <td class="footer footer-1" style="color: #999;font-size: 13px;">
+                {{DEALER SUPPORT PHONE}}      <span class="pipe">
+                    &nbsp;|&nbsp;
+                </span>
+                {{DEALER SUPPORT EMAIL}}
+            </td>
+        </tr>
+        <tr>
+            <td class="em-spacer-0" style="height: 20px;"></td>
+        </tr>
+    </tbody>
+</table>
+@Html.Partial("~/Views/Shared/_FooterScriptTags.cshtml")
+@Html.Widget("home_page_bottom")

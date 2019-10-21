@@ -1,0 +1,193 @@
+﻿@model OrderDetailsModel
+@using Nop.Web.Models.Order;
+
+@{
+
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts("Master Spas Parts");
+}
+
+@Html.Partial("~/Views/Shared/header_nav.cshtml")
+
+<div id="maincontent">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Order Details</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="orderID" data-id="@Model.Id" class="col-md-12">
+                <b>Order ID:  </b>@Model.Id
+            </div>
+        </div>
+        @if (!Model.PONumber.IsEmpty())
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <b>Customer PO: </b>@Model.PONumber
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="col-md-12">
+                <b>Payment Type: </b>@Model.PaymentMethod
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <b>Ship Via: </b>@Model.ShipVia
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <b>Desired Ship Date: </b>@Model.DesiredShipDate
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table" id="tblARInvoiceHistory">
+                    <tr>
+                        <th>Invoice No</th>
+                        <th>Invoice Date</th>
+                        <th>Ship Date</th>
+                        <th>Ship Via</th>
+                        <th>Tracking No</th>
+                    </tr>
+                    @foreach (var invoice in Model.Invoices)
+                    {
+                        <tr>
+                            <td>@invoice.InvoiceNo</td>
+                            <td>@invoice.InvoiceDate</td>
+                            <td>@invoice.ShipDate</td>
+                            <td>@invoice.ShipVia</td>
+                            <td>
+                                <a href="https://www.fedex.com/apps/fedextrack/index.html?tracknumbers=@invoice.TrackingNo" target="_blank">@invoice.TrackingNo</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <strong>Billing Address</strong>
+                <p>
+                    @Model.BillingAddress.Company
+                    @Model.BillingAddress.Address1<br />
+
+                    @if (!Model.BillingAddress.Address2.IsEmpty())
+                    {
+                        @Model.BillingAddress.Address2<br />
+                    }
+                    @Model.BillingAddress.CityStateZip
+                </p>
+            </div>
+            <div class="col-md-6">
+                <strong>Shipping Address</strong>
+                <p>
+                    @Model.BillingAddress.Company
+                    @Model.BillingAddress.Address1<br />
+
+                    @if (!Model.BillingAddress.Address2.IsEmpty())
+                    {
+                        @Model.BillingAddress.Address2<br />
+                    }
+                    @Model.BillingAddress.CityStateZip
+                </p>
+            </div>
+        </div>
+        <hr />
+        @foreach (var item in Model.Items)
+        {
+            <div class="row">
+                <div class="col-sm-2 col-md-1">
+                    <img class="img-responsive product-thumb" src=@("/parts/content/images/thumbs/" + item.Sku + ".jpg") style="width: 80px;height: 80px;">
+
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <p>
+                        @(item.Sku + " - " + item.ProductName)<br />
+                        @item.FullDescription<br />
+                        Qty: @item.Quantity
+                    </p>
+                </div>
+                <div class="col-sm-6 col-md-3 text-right">
+                    <p>
+                        @item.Quantity X @item.UnitPrice<br />
+
+                        @if (item.ItemDiscountTotal != "$0.00")
+                        {
+                            @(Html.Raw("<strong>Discount:</strong> -" + item.ItemDiscountTotal + "<br>"))
+                        }
+                        @item.SubTotal
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    &nbsp;
+                </div>
+            </div>
+        }
+        <hr />
+        <div class="row">
+            <div class="col-md-8 text-right">
+                <p><strong>Subtotal: </strong>@Model.OrderSubtotal</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 text-right">
+                <p><strong>Drop Ship Charge:  </strong>@Model.DropShipCharge</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 text-right">
+                <p><strong>Shipping: </strong>@Model.OrderShipping</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 text-right">
+                <p><strong>Total: </strong>@Model.OrderTotal</p>
+            </div>
+        </div>
+
+        <table style="margin: 0 auto;">
+            <tbody>
+                <tr>
+                    <td class="em-spacer-2" style="height: 52px;"></td>
+                </tr>
+                <tr>
+                    <td class="footer footer-1" style="color: #999;font-size: 13px;">
+                        {{DEALER SUPPORT PHONE}}      <span class="pipe">
+                            &nbsp;|&nbsp;
+                        </span>
+                        {{DEALER SUPPORT EMAIL}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="em-spacer-0" style="height: 20px;"></td>
+                </tr>
+            </tbody>
+        </table>
+        @Html.Partial("~/Views/Shared/_FooterScriptTags.cshtml")
+        @Html.Widget("home_page_bottom")

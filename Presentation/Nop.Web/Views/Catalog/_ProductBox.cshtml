@@ -1,0 +1,70 @@
+﻿@model ProductOverviewModel
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Catalog;
+@{
+    //prepare "Add to cart" AJAX link
+    string addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 999999;
+
+
+    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+    }
+    else
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, });
+    } 
+       
+}
+
+                       
+                            
+                        <tr class="animated fadeInDown">
+                            <td>
+                                <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title"">
+                                    <img class="img-responsive" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+                                </a>
+                            </td>
+                            <td><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Sku</a></td>
+                            @{
+                                var PartName = Model.Name;
+                                
+                                if (Model.ProductPrice.DisableBuyButton)
+                                {
+                                    PartName = "Discontinued (NLA) - " + PartName;
+                                }
+                                
+                                
+                            }
+                            <td>@PartName</td>
+                            <td>@Model.ProductPrice.Price</td>
+                                                        
+                            @{
+                                if (!Model.ProductPrice.DisableBuyButton)
+                                {
+                                    <td>
+                                        @Html.TextBox("qty" + Model.Id, "1", new { @class = "form-control", @type = "number", @style = "max-width:70px;" })
+                                    </td>
+                                    <td>
+                                        <input type="button" value="Add to Cart" class="btn btn-success" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.Id'); return false;" />
+                                    </td>
+                                }
+                            }
+                        </tr>
+                       
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1 @@
+Copy C:\Projects\Parts\nopCommerce_3.20_Source\Presentation\Nop.Web\Views\checkout\onepagecheckout.cshtml  C:\inetpub\wwwroot\Parts\Views\Checkout\onepagecheckout.cshtml

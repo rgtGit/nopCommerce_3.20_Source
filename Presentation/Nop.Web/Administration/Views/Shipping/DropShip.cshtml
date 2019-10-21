@@ -1,0 +1,40 @@
+﻿@using Telerik.Web.Mvc.UI;
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.DropShip").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+        @T("Admin.Configuration.Shipping.DropShip")
+    </div>
+</div>
+<table class="adminContent">
+<script>
+</script>
+    <tr>
+        <td>
+
+            @(Html.Telerik().Grid<ShippingDropModel>()
+                    .Name("shippingdrop-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.MinimumCharge).Width(25);
+                        columns.Bound(x => x.PercentageOfSubTotal).Width(25);
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "EditDropShip", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"EditDropShip/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate(T("Admin.Common.Edit").Text);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("DropShip", "Shipping"))
+                    .EnableCustomBinding(true))
+            
+        </td>
+    </tr>
+</table>

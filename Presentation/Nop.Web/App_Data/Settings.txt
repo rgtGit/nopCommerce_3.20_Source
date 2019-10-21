@@ -1,0 +1,2 @@
+DataProvider: sqlserver
+DataConnectionString: Data Source=MSPADBSRVR\SQLSRVR_2012EX;Initial Catalog=MSPAS_OL_PARTS;User ID=rgtDBA;Password=MasterSpasDBA;MultipleActiveResultSets=True

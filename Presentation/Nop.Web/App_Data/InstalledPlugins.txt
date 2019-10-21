@@ -1,0 +1,4 @@
+Shipping.FixedRate
+Payments.Manual
+DiscountRequirement.HadSpentAmount
+Shipping.FedEx

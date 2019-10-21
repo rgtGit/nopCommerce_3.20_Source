@@ -1,0 +1,15 @@
+﻿@model FooterModel
+@using Nop.Web.Models.Common;
+
+<footer class="footer">
+        <div class="container">
+            Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
+            @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+            Find more info here http://www.nopcommerce.com/copyrightremoval.aspx*@
+            </br>
+            @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
+        </div>
+    </div>
+    @Html.Action("ChangeDeviceBlock", "Common")
+    @Html.Widget("footer")
+</div>

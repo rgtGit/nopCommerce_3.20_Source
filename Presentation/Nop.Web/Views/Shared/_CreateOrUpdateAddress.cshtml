@@ -1,0 +1,143 @@
+﻿@model AddressModel
+@using Nop.Web.Models.Common;
+
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#@Html.FieldIdFor(model => model.CountryId)").on("change", function () {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }
+                });
+            });
+        });
+    </script>
+}
+@Html.HiddenFor(model => model.Id)
+
+<div class="row">
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_FirstName">First name:</label><span class="required">*</span>
+        @Html.ValidationMessageFor(model => model.FirstName)
+        @Html.EditorFor(model => model.FirstName)
+    </div>
+
+ 
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_LastName">Last name:</label><span class="required">*</span>
+        @Html.ValidationMessageFor(model => model.LastName)
+        @Html.EditorFor(model => model.LastName)
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_Address1">Address 1:</label><span class="required">*</span>
+        @Html.ValidationMessageFor(model => model.Address1)
+        @Html.EditorFor(model => model.Address1)
+        <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Address1" data-valmsg-replace="true"></span>
+    </div>
+
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_Address2">Address 2:</label>
+        @Html.EditorFor(model => model.Address2)
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_CountryId">Country:</label><span class="required">
+            *
+            @Html.ValidationMessageFor(model => model.CountryId)
+        </span>
+        @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { @class = "form-control" })
+    </div>
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_StateProvinceId">State / province:</label>@Html.ValidationMessageFor(model => model.StateProvinceId)
+        @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "form-control" })
+        <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+        </span>
+    </div>
+</div>        
+
+<div class="row">
+
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_City">City:</label><span class="required">*</span>
+        @Html.ValidationMessageFor(model => model.City)
+        @Html.EditorFor(model => model.City)
+        <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.City" data-valmsg-replace="true"></span>
+    </div>
+
+
+
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_ZipPostalCode">Zip / postal code:</label><span class="required">*</span>
+        @Html.ValidationMessageFor(model => model.ZipPostalCode)
+        @Html.EditorFor(model => model.ZipPostalCode)
+        <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.ZipPostalCode" data-valmsg-replace="true"></span>
+    </div>
+</div>        
+
+<div class="row">
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_PhoneNumber">Phone number:</label>
+        @Html.ValidationMessageFor(model => model.PhoneNumber)
+        @Html.EditorFor(model => model.PhoneNumber)
+        <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.PhoneNumber" data-valmsg-replace="true"></span>
+    </div>
+    <div class="col-md-6 inputs form-group">
+        <label for="BillingNewAddress_Company">Company:</label>
+        @Html.ValidationMessageFor(model => model.Company)
+        @Html.EditorFor(model => model.Company)
+        <span class="field-validation-valid" data-valmsg-for="BillingNewAddress.Company" data-valmsg-replace="true"></span>
+    </div>
+
+</div>
+
+
+<script>
+    /* Script below to overide NOP Classes in Checkout... */
+   $(document).ready(function () {
+        $("#BillingNewAddress_FirstName").addClass('form-control');
+        $("#BillingNewAddress_LastName").addClass('form-control');
+        $("#BillingNewAddress_Email").addClass('form-control');
+        $("#BillingNewAddress_Company").addClass('form-control');
+        $("#BillingNewAddress_Address1").addClass('form-control');
+        $("#BillingNewAddress_Address2").addClass('form-control');
+        $("#BillingNewAddress_City").addClass('form-control');
+        $("#BillingNewAddress_ZipPostalCode").addClass('form-control');
+        $("#BillingNewAddress_PhoneNumber").addClass('form-control');
+        $("#BillingNewAddress_FaxNumber").addClass('form-control');
+
+        $("#ShippingNewAddress_FirstName").addClass('form-control');
+        $("#ShippingNewAddress_LastName").addClass('form-control');
+        $("#ShippingNewAddress_Email").addClass('form-control');
+        $("#ShippingNewAddress_Company").addClass('form-control');
+        $("#ShippingNewAddress_Address1").addClass('form-control');
+        $("#ShippingNewAddress_Address2").addClass('form-control');
+        $("#ShippingNewAddress_City").addClass('form-control');
+        $("#ShippingNewAddress_ZipPostalCode").addClass('form-control');
+        $("#ShippingNewAddress_PhoneNumber").addClass('form-control');
+        $("#ShippingNewAddress_FaxNumber").addClass('form-control');
+        $("#ShippingNewAddress_CountryId").val("1").trigger("change"); // United States
+    });
+</script>

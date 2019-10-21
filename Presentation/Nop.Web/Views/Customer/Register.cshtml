@@ -1,0 +1,153 @@
+﻿@model RegisterModel
+@using Nop.Web.Models.Customer;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts("Master Spas Parts | Register");
+}
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+             var selectedItem = $(this).val();
+             var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }
+                });
+            });
+     });
+    </script>
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="gearBox"> <img id="innerGear" class="rotating" src="~/Images/geargrey.png"> <img id="outerGear" class="counter" src="~/Images/geargrey.png"> </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 id="loginLogo"><img src="~/Images/logo.png"></h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-sm-3 col-md-4"></div>
+            <div id="loginModal" class="col-xs-8 col-sm-6 col-md-4">
+                <div>
+                    <h2 class="form-signin-heading">Account Registration</h2>
+                </div>
+                <div class="page-body">
+                    <div class="message-error">
+                        @Html.ValidationSummary(true)
+                    </div>
+                    @Html.Partial("_ExternalAuthentication.AssociateMessage")
+                    <div class="fieldset">
+                        <div class="form-fields">
+                            <div class="row">
+                                @Html.Partial("_ExternalAuthentication.AssociateMessage")
+                                @Html.TextBoxFor(m => m.Account, new { @class = "form-control", autofocus = "autofocus", placeholder = "Account No" })
+                                @Html.ValidationMessageFor(m => m.Account)
+                                <br />
+                            </div>
+                            <div class="row">
+                                @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control", autofocus = "autofocus", placeholder = "Zip Code" })
+                                @Html.ValidationMessageFor(m => m.ZipCode)
+                                <br />
+                            </div>
+                            <div class="row">
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", autofocus = "autofocus", placeholder = "First Name" })
+                                @Html.ValidationMessageFor(m => m.FirstName)
+                                <br />
+                            </div>
+                            <div class="row">
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", autofocus = "autofocus", placeholder = "Last Name" })
+                                @Html.ValidationMessageFor(m => m.LastName)
+                                <br />
+                            </div>
+                            <div class="row">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", autofocus = "autofocus", placeholder = "Email" })
+                                @Html.ValidationMessageFor(m => m.Email)
+                                <br />
+                            </div>
+                            @if (Model.UsernamesEnabled)
+                        {
+                            <div class="row">
+                                @Html.TextBoxFor(m => m.Username, new { @class = "form-control", autofocus = "autofocus", placeholder = "Username" })
+                                @Html.ValidationMessageFor(m => m.Username)
+                                <br />
+                                @if (Model.CheckUsernameAvailabilityEnabled)
+                            {
+                                @Html.Partial("_CheckUsernameAvailability")
+                        }
+                            </div>
+                    }
+                            <div class="row">
+                                @Html.TextBoxFor(m => m.Password, new { @class = "form-control", autofocus = "autofocus", placeholder = "Password" })
+                                @Html.ValidationMessageFor(m => m.Password)
+                                <br />
+                            </div>
+                            <div class="row">
+                                @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control", autofocus = "autofocus", placeholder = "Confirm Password" })
+                                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.PhoneEnabled || Model.FaxEnabled)
+                {
+                    <div class="row">
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", autofocus = "autofocus", placeholder = "Phone" })
+                        @Html.ValidationMessageFor(m => m.Phone)
+                        <br />
+                    </div>
+            }
+
+                    @if (Model.AcceptPrivacyPolicyEnabled)
+                {
+                    <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#register-button').click(function () {
+                            if ($('#accept-privacy-policy').is(':checked')) {
+                                //do some stuff
+                                return true;
+                            }
+                            else {
+                                //just show validation errors, dont post
+                                alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
+                                return false;
+                            }
+                        });
+                    });
+                    </script>
+                    <div class="accept-privacy-policy">
+                        <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
+                        <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
+                        <a class="read" href='@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })'>@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                    </div>
+            }
+                    <div class="buttons">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Register Account</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        }

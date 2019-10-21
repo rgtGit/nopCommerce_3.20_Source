@@ -1,0 +1,33 @@
+﻿@model RegisterResultModel
+@using Nop.Web.Models.Customer;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts("Master Spas Parts | Thank You");
+
+
+
+    //continue URL
+    var continueUrl = "";
+    if (!String.IsNullOrEmpty(this.Context.Request.QueryString["returnUrl"]))
+    {
+        continueUrl = this.Context.Request.QueryString["returnUrl"];
+    }
+    else
+    {
+        continueUrl = Url.RouteUrl("HomePage");
+    }
+}
+
+<div class="container">
+    <div class="row" id="congratulations">
+        <div class="col-xs-12 col-md-12">
+            <img class="img-responsive animated infinite pulse" src="/Parts/Images/sign-check-icon.png">
+        </div>
+        <div class="col-xs-12 col-md-12 animated bounceIn">
+            <h2>Congratulations! Your account has been registered.</h2>
+            <button class="btn btn-success" onclick="location.href='@continueUrl'">Continue Shopping</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.Manual.Models.PaymentInfoModel
+@using Nop.Web.Framework;
+
+<span style="color:red; font-weight:bold">
+    *** IF YOU DO NOT HAVE A CREDIT CARD ON FILE, PLEASE CONTACT CUSTOMER SERVICE INVOICING AT EXT. 2003 SO WE CAN SECURELY CAPTURE YOUR INFORMATION. ***  (Last Credit Card used will display).
+</span>
+<br />
+<br />
+<table width="40%" cellspacing="2" cellpadding="1" border="0">
+    <tr>
+        <td>
+            @* --- RGT  @Html.NopLabelFor(model => model.CreditCardTypes, false)  *@
+            @Html.Raw("Select Credit Card Type:")
+        </td>
+        <td>
+            @Html.DropDownListFor(model => model.CreditCardType, Model.CreditCardTypes, new { @class = "dropdownlists" })
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @* --- RGT  @Html.NopLabelFor(model => model.CardCode, false) --- *@
+            @Html.Raw("Last 4 digits on Credit Card:")
+        </td>
+        <td>
+            <input id="CardCode" name="CardCode" value="@Model.CCLastFour" style = "Width: 60px;", autocomplete = "off", maxlength = 4 />            
+@*@Html.TextBox("CardCode", new {  })  *@
+            @Html.ValidationMessageFor(model => model.CardCode)
+        </td>
+    </tr>
+</table>

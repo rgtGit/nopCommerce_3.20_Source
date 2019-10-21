@@ -1,0 +1,267 @@
+﻿
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6" style="text-align:center;"> <a href="index.cshtml"><img alt="Master Spas Parts Ordering System" src="~/Images/logo.png"> </a></div>
+            <div class="col-md-2">
+                @Html.Action("HeaderLinks", "Common")
+            </div>
+            <div class="col-md-4">
+
+                @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
+                {
+                    <div class="input-group">
+                        <input id="Q" class="form-control" type="text" value="" placeholder="Search for a part..." name="Q">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">Go!</button>
+                        </span>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</header>
+<div id="navcontainer" class="container-fluid">
+    <nav class="navbar navbar-default navbar-static">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+            </div>
+            <div class="collapse navbar-collapse js-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown dropdown-large">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">A/V Components<b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-menu-large row ">
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li class="dropdown-header">STS Equipment</li>
+                                    <li><a href="~/Search?Q=DC Power Supplies">DC Power Supplies</a></li>
+                                    <li><a href="~/Search?Q=Enclosures">Enclosures</a></li>
+                                    <li><a href="~/Search?Q=Head Units & Amps">Head Units &amp; Amps</a></li>
+                                    <li><a href="~/Search?Q=Input & iPod Adaptors">Input &amp; iPod Adaptors</a></li>
+                                    <li><a href="~/Search?Q=>Remote Controls & Equipment">Remote Controls &amp; Equipment</a></li>
+                                    <li><a href="~/Search?Q=TVs & Tuners">TVs &amp; Tuners</a></li>
+                                    <li><a href="~/Search?Q=Wiring">Wiring</a></li>
+                                </ul>
+                            </li>
+
+
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li class="dropdown-header">TV Lifts</li>
+                                    <li><a href="~/Search?Q=2001 to 2002">Auto Lifts-2001 to 2002</a> </li>
+                                    <li><a href="~/Search?Q=2003 to 2005">Auto Lifts-2003 to 2005</a> </li>
+                                    <li><a href="~/Search?Q=2006 to 2007">Auto Lifts-2006 to 2007</a> </li>
+                                    <li><a href="~/Search?Q=2008 to 2011">Auto Lifts-2008 to 2011</a> </li>
+                                    <li><a href="~/Search?Q=TV Lifts - Manual">Manual Lifts</a></li>
+                                    <li><a href="~/Search?Q=Electronic Lift Controls">Electronic Lift Controls</a> </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown dropdown-large">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accessories<b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-menu-large row">
+                            <li class="col-sm-4">
+                                <ul>
+                                    <li class="dropdown-header">Spa Covers</li>
+                                    <li><a href="~/Search?Q=Covers">Covers</a></li>
+                                    <li><a href="~/Search?Q=Cover Lifts">Cover Lifts</a></li>
+                                    <li><a href="~/Search?Q=Inserts">Inserts</a></li>
+                                    <li><a href="~/Search?Q=Parts">Parts</a></li>
+                                    <li><a href="~/Search?Q=Skins">Skins</a></li>
+                                </ul>
+                            </li>
+                            <li class="col-sm-4">
+                                <ul>
+                                    <li class="dropdown-header">Water</li>
+                                    <li><a href="~/Search?Q=Chemicals">Chemicals</a></li>
+                                    <li><a href="~/Search?Q=Filter Elements">Filter Elements</a></li>
+                                    <li><a href="~/Search?Q=Filter Lids">Filter Lids</a></li>
+                                </ul>
+                            </li>
+                            <li class="col-sm-4">
+                                <ul>
+                                    <li class="dropdown-header">Accessories Misc</li>
+                                    <li><a href="~/Search?Q=Pillows">Pillows</a></li>
+                                    <li><a href="~/Search?Q=Steps">Steps</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown dropdown-large">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Electrical Components<b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-menu-large row">
+                            <li class="col-sm-3">
+                                <ul>
+                                    <li class="dropdown-header">Circuit Boards</li>
+                                    <li><a href="~/Search?Q=CB-Daughter">Daughter</a></li>
+                                    <li><a href="~/Search?Q=CB-Main">Main</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Control Panels</li>
+                                    <li><a href="~/Search?Q=Auxiliary">Auxiliary</a></li>
+                                    <li><a href="~/Search?Q=CP-Main">Main</a></li>
+                                    <li><a href="~/Search?Q=Overlays">Overlays</a></li>
+                                    <li><a href="~/Search?Q=Spa Control Packs">Spa Control Packs</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Electrical</li>
+                                    <li><a href="~/Search?Q=Cords & Harnesses">Cords &amp; Harnesses</a></li>
+                                    <li><a href="~/Search?Q=Fuses">Fuses</a></li>
+                                    <li><a href="~/Search?Q=GFCI's">GFCI's</a></li>
+                                    <li><a href="~/Search?Q=Terminal Blocks">Terminal Blocks</a></li>
+                                    <li><a href="~/Search?Q=Fuse Holders">Fuse Holders</a></li>
+                                    <li><a href="~/Search?Q=Transformers">Transformers</a></li>
+                                    <li><a href="~/Search?Q=EL-Wiring">Wiring</a></li>
+                                    <li><a href="~/Search?Q=Sensors & Pressure Switches">Sensors &amp; Pressure Switches</a></li>
+                                    <li><a href="~/Search?Q=Control Packs">Control Packs</a></li>
+                                </ul>
+                            </li>
+                            <li class="col-sm-3">
+                                <ul>
+                                    <li class="dropdown-header">Heaters</li>
+                                    <li><a href="~/Search?Q=Aux Heaters">Aux Heaters</a></li>
+                                    <li><a href="~/Search?Q=Heater Straps">Heater Straps</a></li>
+                                    <li><a href="~/Search?Q=>Heaters w/ Pressure Switch">Heaters w/ Pressure Switch</a></li>
+                                    <li><a href="~/Search?Q=M7 Heaters">M7 Heaters</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Lighting</li>
+                                    <li><a href="~/Search?Q=Fiber Optic">Fiber Optic</a></li>
+                                    <li><a href="~/Search?Q=LED">LED</a></li>
+                                    <li><a href="~/Search?Q=Standard">Standard</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Ozone</li>
+                                    <li><a href="~/Search?Q=Fittings">Fittings</a></li>
+                                    <li><a href="~/Search?Q=Generators">Generators</a></li>
+                                    <li><a href="~/Search?Q=WInjectors & Mixers">Injectors &amp; Mixers</a></li>
+                                </ul>
+                            </li>
+                            <li class="col-sm-3">
+                                <ul>
+                                    <li class="dropdown-header">Pumps</li>
+                                    <li><a href="~/Search?Q=Circulation Pumps">Circulation Pumps</a></li>
+                                    <li><a href="~/Search?Q=Parts">Parts</a></li>
+                                    <li><a href="~/Search?Q=Therapy Pumps">Therapy Pumps</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">International Parts</li>
+                                    <li><a href="~/Search?Q=Int-Circuit Boards">Circuit Boards</a></li>
+                                    <li><a href="~/Search?Q=Int-Control Packs">Control Packs</a></li>
+                                    <li><a href="~/Search?Q=Int-Control Panels & Overlays">Control Panels &amp; Overlays</a></li>
+                                    <li><a href="~/Search?Q=Int-Heaters">Heaters</a></li>
+                                    <li><a href="~/Search?Q=Int-Misc.">Misc.</a></li>
+                                    <li><a href="~/Search?Q=Int-Pumps">Pumps</a></li>
+                                    <li class="divider"></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown dropdown-large">
+                        <a href="Parts/Search?Q=Wiring" class="dropdown-toggle" data-toggle="dropdown">Jets &amp; Wall Fittings<b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-menu-large row">
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li class="dropdown-header">Jets &amp; Jet Bodies</li>
+                                    <li><a href="~/Search?Q=Custom Molded Jets">Custom Molded Jets</a></li>
+                                    <li><a href="~/Search?Q=G.G. Industry/BWG Jets">G.G. Industry/BWG Jets</a></li>
+                                    <li><a href="~/Search?Q=Pentair/BWG Jets">Pentair/BWG Jets</a></li>
+                                    <li><a href="~/Search?Q=Waterway Snap-In Jets">Waterway Snap-In Jets</a></li>
+                                    <li><a href="~/Search?Q=Waterway Threaded Jets">Waterway Threaded Jets</a></li>
+                                    <li class="divider"></li>
+                                </ul>
+                            </li>
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li><a href="~/Search?Q=Small Waterfalls & Water Features">Small Waterfalls &amp; Water Features</a></li>
+                                    <li><a href="~/Search?Q=Suctions">Suctions</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown dropdown-large">
+                        <a href="Parts/Search?Q=Wiring" class="dropdown-toggle" data-toggle="dropdown">Plumbing &amp; Hardware<b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-menu-large row">
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li class="dropdown-header">Plumbing</li>
+                                    <li><a href="~/Search?Q=Air Controls">Air Controls</a></li>
+                                    <li><a href="~/Search?Q=Ball, Check & Gate Valves">Ball, Check &amp; Gate Valves</a></li>
+                                    <li><a href="~/Search?Q=Caps & Plugs">Caps &amp; Plugs</a></li>
+                                    <li><a href="~/Search?Q=Elbows, Wyes & Tees">Elbows, Wyes &amp; Tees</a></li>
+                                    <li><a href="~/Search?Q=Hose & Hose Clamps">Hose &amp; Hose Clamps</a></li>
+                                    <li><a href="~/Search?Q=Manifolds">Manifolds</a></li>
+                                    <li><a href="~/Search?Q=Reducers, Couplers & Adaptors">Reducers, Couplers &amp; Adaptors</a></li>
+                                    <li><a href="~/Search?Q=Unions, Tailpieces & Split Nuts">Unions, Tailpieces &amp; Split Nuts</a></li>
+                                    <li><a href="~/Search?Q=Wall Fittings & Drains">Wall Fittings &amp; Drains</a></li>
+                                    <li class="divider"></li>
+                                </ul>
+                            </li>
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li><a href="~/Search?Q=O-Rings & Gaskets">O-Rings &amp; Gaskets</a></li>
+                                    <li><a href="~/Search?Q=Hardware & Connectors">Hardware &amp; Connectors</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li class="dropdown dropdown-large">
+                        <a href="Parts/Search?Q=Wiring" class="dropdown-toggle" data-toggle="dropdown">Skirting<b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-menu-large row">
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li class="dropdown-header">Kits and Hardware</li>
+                                    <li><a href="~/Search?Q=Skirt Kit">Skirting Kits</a></li>
+                                    <li><a href="~/Search?Skirting Hardware">Skirting Hardware</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li class="dropdown dropdown-large">
+                        <a href="Parts/Search?Q=Wiring" class="dropdown-toggle" data-toggle="dropdown">Swim Spa<b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-menu-large row">
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li class="dropdown-header">Propulsion System</li>
+                                    <li><a href="~/Search?Q=2006 36VDC Propulsion System">2006 36VDC Propulsion System</a></li>
+                                    <li><a href="~/Search?Q=PS-Wiring">Wiring</a></li>
+                                    <li><a href="~/Search?Q=PS-Wiring">Wiring</a></li>
+                                    <li><a href="~/Search?Q=Propellers & Propulsion Bearings">Propellers &amp; Propulsion Bearings</a></li>
+                                    <li><a href="~/Search?Q=Propulsion Control Panels">Propulsion Control Panels</a></li>
+                                    <li><a href="~/Search?Q=Wave Propulsion System">Wave Propulsion System</a></li>
+                                    <li><a href="~/Search?Q=Wave XP Propulsion System">Wave XP Propulsion System</a></li>
+                                    <li><a href="~/Search?Q=Wave XP Pro Propulsion System">Wave XP Pro Propulsion System</a></li>
+                                    <li><a href="~/Search?Q=Wave XP Pro Propulsion">Wave XP Pro Propulsion</a></li>
+                                    <li class="divider"></li>
+                                </ul>
+                            </li>
+                            <li class="col-sm-6">
+                                <ul>
+                                    <li><a href="~/Search?Q=RX/Commercial">RX/Commercial</a></li>
+                                    <li><a href="~/Search?Q=Filter Housings">Filter Housings</a></li>
+                                    <li><a href="~/Search?Q=>Handrail">Handrails</a></li>
+                                    <li><a href="~/Search?Q=Miscellaneous">Miscellaneous</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="Parts/Search?Q=Wiring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Info <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="~/OrderFilter">Orders</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.nav-collapse -->
+        </div>
+        <!-- /container -->
+    </nav>
+</div>
+<!-- /container-fluid -->

@@ -1,0 +1,16 @@
+﻿@model ShoppingCartModel
+@using Nop.Web.Models.Checkout
+@using Nop.Web.Models.ShoppingCart;
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ShoppingCart").Text);
+}
+
+@Html.Partial("~/Views/Shared/header_nav.cshtml")
+@Html.Partial("OrderSummary", Model)
+
+@Html.Partial("~/Views/Shared/_FooterScriptTags.cshtml")
+@Html.Widget("home_page_bottom")

@@ -1,0 +1,44 @@
+﻿@model HeaderLinksModel
+@using Nop.Web.Models.Common;
+
+
+   
+@if (Model.ShoppingCartEnabled)
+{
+    <a class="btn btn-default form-control" href="~/Cart"><img style="max-width:20px;" src="~/Images/cart.png"> Cart @T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</a>
+    
+    if (Model.ShoppingCartItems > 0) {
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#337ab7; color:#fff;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:#fff;">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel" style="color:#fff;">Your Cart is Not Empty</h3>
+      </div>
+      <div class="modal-body">
+        <p class="lead">Your cart still has items in it from the last time you logged in. What would you like to do with them?</p>
+      </div>
+      <div class="modal-footer">
+            @using (Html.BeginForm("cartDialog", "ShoppingCart", FormMethod.Post)){
+            <input type="submit" name="submitButton" class="btn btn-danger" value="Clear My Cart" />
+            <input type="submit" name="submitButton" class="btn btn-success" value="Shopping Cart" />
+            <input type="button" name="closeCartDialog" data-dismiss="modal" aria-label="Close" class="btn btn-success" value="Continue Shopping" />
+            }
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    }
+<!-- Modal -->
+
+ 
+
+   
+}
+       
+     <script>
+        $('#myModal').modal();
+    </script>  

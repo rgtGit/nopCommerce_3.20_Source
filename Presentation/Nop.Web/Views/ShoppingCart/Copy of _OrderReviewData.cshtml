@@ -1,0 +1,50 @@
+﻿@model ShoppingCartModel.OrderReviewDataModel
+@using Nop.Web.Models.ShoppingCart;
+@if (Model.Display)
+{
+
+    <div class="row">
+    	<div class="col-md-6">
+	        	<ul class="billing-info list-group">
+	    	    	<li class="title list-group-item list-group-item-info"> <strong>Billing Address</strong> </li>
+	    		    <li class="name list-group-item">@Model.BillingAddress.FirstName @Model.BillingAddress.LastName</li>
+        		    <li class="address1 list-group-item">@Model.BillingAddress.Address1 </li>
+	    		    <li class="city-state-zip list-group-item">@Model.BillingAddress.Address2 </li>
+    	    		<li class="city-state-zip list-group-item">@Model.BillingAddress.City </li>
+		    	    <li class="city-state-zip list-group-item">@Model.BillingAddress.StateProvinceName </li>
+		    	    <li class="country list-group-item">@Model.BillingAddress.CountryName </li>
+                    <li class="email list-group-item">@T("Order.Email"): @Model.BillingAddress.Email </li>
+                    <li class="phone list-group-item">@T("Order.Phone"): @Model.BillingAddress.PhoneNumber </li>
+			        <li class="fax list-group-item">@T("Order.Fax"): @Model.BillingAddress.FaxNumber </li>
+    	        </ul>
+        </div>
+        <div class="col-md-6">
+		    <ul class="shipping-info list-group">
+			    <li class="title list-group-item list-group-item-info"> <strong>Shipping Address</strong> </li>
+    			<li class="name list-group-item">@Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName</li>
+    			<li class="address1 list-group-item">@Model.ShippingAddress.Address1 </li>
+    			<li class="city-state-zip list-group-item">@Model.ShippingAddress.Address2 </li>
+    			<li class="city-state-zip list-group-item">@Model.ShippingAddress.City </li>
+    			<li class="city-state-zip list-group-item">@Model.ShippingAddress.StateProvinceName </li>
+    			<li class="country list-group-item">@Model.ShippingAddress.CountryName </li>
+                <li class="email list-group-item">@T("Order.Email"): @Model.ShippingAddress.Email </li>
+    			<li class="phone list-group-item">@T("Order.Phone"): @Model.ShippingAddress.PhoneNumber </li>
+			    <li class="fax list-group-item">@T("Order.Fax"): @Model.ShippingAddress.FaxNumber </li>
+		    </ul>
+	    </div>
+    </div>
+    <div class="row">
+	    <div class="col-md-6">
+		    <ul class="billing-info list-group">
+			    <li class="title list-group-item list-group-item-info"> <strong>Payment Method</strong> </li>
+			    <li class="payment-method list-group-item"> @Model.PaymentMethod </li>
+    	    </ul>
+	    </div>
+        <div class="col-md-6">
+		    <ul class="billing-info list-group">
+			    <li class="title list-group-item list-group-item-info"> <strong>Shipping Method</strong> </li>
+			    <li class="payment-method list-group-item">@Model.ShippingMethod </li>
+    	    </ul>
+	    </div>
+    </div>
+}

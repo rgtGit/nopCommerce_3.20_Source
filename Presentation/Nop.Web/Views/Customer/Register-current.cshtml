@@ -1,0 +1,63 @@
+﻿@model RegisterModel
+@using Nop.Web.Models.Customer;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts("Master Spas Parts | Register");
+
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="gearBox"> <img id="innerGear" class="rotating" src="~/Images/geargrey.png"> <img id="outerGear" class="counter" src="~/Images/geargrey.png"> </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 id="loginLogo"><img src="~/Images/logo.png"></h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-2 col-sm-3 col-md-4"></div>
+            <div id="loginModal" class="col-xs-8 col-sm-6 col-md-4">
+                <div>
+
+                    <h2 class="form-signin-heading">Account Registration</h2>
+                    <div class="message-error">
+                        @Html.ValidationSummary(true)
+                    </div>
+                    @Html.Partial("_ExternalAuthentication.AssociateMessage")
+                    @Html.TextBoxFor(m => m.Account, new { @class = "form-control", autofocus = "autofocus", placeholder = "Account No" })
+                    @Html.ValidationMessageFor(m => m.Account)
+                    <br />
+                    @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control", autofocus = "autofocus", placeholder = "Zip Code" })
+                    @Html.ValidationMessageFor(m => m.ZipCode)
+                    <br />
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", autofocus = "autofocus", placeholder = "Email" })
+                    @Html.ValidationMessageFor(m => m.Email)
+                    <br />
+                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", autofocus = "autofocus", placeholder = "First Name" })
+                    @Html.ValidationMessageFor(m => m.FirstName)
+                    <br />
+                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", autofocus = "autofocus", placeholder = "Last Name" })
+                    @Html.ValidationMessageFor(m => m.LastName)
+                    <br />
+                    @Html.TextBoxFor(m => m.Username, new { @class = "form-control", autofocus = "autofocus", placeholder = "Username" })
+                    @Html.ValidationMessageFor(m => m.Username)
+                    <br />
+                    @Html.TextBoxFor(m => m.Password, new { @class = "form-control", autofocus = "autofocus", placeholder = "Password" })
+                    @Html.ValidationMessageFor(m => m.Password)
+                    <br />
+                    @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control", autofocus = "autofocus", placeholder = "Confirm Password" })
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+
+                </div>
+                <br />
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Register Account</button>
+            </div>
+        </div>
+        <div class="col-xs-2 col-sm-3 col-md-4"></div>
+    </div>
+}

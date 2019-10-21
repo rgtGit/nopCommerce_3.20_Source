@@ -1,0 +1,65 @@
+﻿@model CheckoutShippingMethodModel
+@using Nop.Web.Models.Checkout;
+<div class="checkout-data">
+    @Html.Widget("op_checkout_shipping_method_top")
+    <div class="section shipping-method">
+        <label for="desiredShipDate"<strong>Desired Ship Date </strong></label>
+        <input type="date" id="desiredShipDate" name="desiredShipDate" />
+        @if (Model.Warnings.Count == 0)
+        {
+            <div class="section shipping-method">
+
+                @for (int i = 0; i < Model.ShippingMethods.Count; i++)
+                {
+                    var shippingMethod = Model.ShippingMethods[i];
+                    <div class="funkyradio method-list">
+                        <div class="funkyradio-success method-name">
+                            <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" />
+                            <label for="shippingoption_@(i)"><strong>@T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)</strong></label>
+                        </div>
+                    </div>
+                    <small class="method-description">
+                        @Html.Raw("Estimated Delivery if shipped today:  " + shippingMethod.Description)
+                    </small>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="message-error">
+                <ul>
+                    @foreach (var warning in Model.Warnings)
+                    {
+                        <li>@warning</li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+    @Html.Widget("op_checkout_shipping_method_bottom")
+</div>
+<script>
+
+    $(document).ready(function () {
+        var todaysDate = new Date();
+        var dateMonth = todaysDate.getMonth() + 1;
+        var dateDay = todaysDate.getDate();
+        var dateYear = todaysDate.getFullYear();
+
+        if (dateMonth < 10) {
+            dateMonth = "0" + dateMonth;
+        }
+
+        if (dateDay < 10) {
+            dateDay = "0" + dateDay;
+        }         
+    
+
+        //var dp = dateYear + "-" + dateMonth + "-" + dateDay;
+        var dp = dateYear + "-" + dateMonth + "-" +  dateDay;
+        
+        $("#desiredShipDate").val(dp);
+
+    });
+
+</script>

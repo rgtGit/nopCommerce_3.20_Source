@@ -1,0 +1,80 @@
+﻿@model ShoppingCartModel
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.ShoppingCart;
+@{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+}
+           
+
+<div class="container">
+
+    @if (Model.Items.Count > 0)
+    {
+
+        @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
+        using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            <div class="row">
+                    <div class="col-md-12">
+                        <h2>Shopping Cart</h2>
+                        <p>Quantities can be changed by editing the number in the Quantity column. To remove an item, click the trash can located to the very left of the row you wish to remove.</p>
+                        <p><i>Note:   If there is not ent in stock to cover a particualar item, a warning sign will display.</i></p>
+                        <p>&nbsp;</p>
+                        <table class="table">
+                            <tr>
+                                <th></th>
+                                <th>Item Number</th>
+                                <th>Item Description</th>
+                                <th>Quantity</th>
+                                <th></th>
+                                <th style="text-align:right">Unit Price</th>
+                                <th style="text-align:right">Extension</th>
+                            </tr>
+
+ 
+            
+                    @foreach (var item in Model.Items)
+                    {
+
+                            <tr>
+                                <td>
+                                    <input type="submit" name="removefromcart-@(item.Id)" value="@(item.Id)" class="trashItem"  />
+                                </td>
+                                <td>@item.Sku</td>
+                                <td>@item.ProductName</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input name="itemquantity@(item.Id)" type="number" value="@(item.Quantity)" class="form-control" style="max-width:75px;" />
+                                    </div>
+                               </td>
+                               <td>
+                                    @* For testing....item.AvailableStock *@
+                                    @if (item.AvailableStock <= item.Quantity)
+                                    {
+                                        <img src="~/Images/part-low-icon.png" />
+                                    }
+                                </td>
+                                <td style="text-align:right">@item.UnitPrice</td>
+                                <td style="text-align:right">@item.SubTotal</td>
+                            </tr>
+
+                        
+                    }
+            </table>
+                    
+                @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = Model.IsEditable })
+        </div>
+     
+      </div>  
+        
+        }
+    }
+    else
+    {
+        @T("ShoppingCart.CartIsEmpty")
+    }
+  
+
+</div>

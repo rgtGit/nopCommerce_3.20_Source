@@ -1,0 +1,745 @@
+﻿@model CheckoutPaymentInfoModel
+
+@using Nop.Web.Models.Checkout;
+@using Nop.Core.Infrastructure;
+
+@using PayJS_Security
+@using Newtonsoft.Json;
+
+@{Nonces Nonces = Shared.GetNonces();
+
+    var requestPayment = new
+    {
+        merchantId = Shared.MerchantID,
+        merchantKey = Shared.MerchantKEY, // don't include the Merchant Key in the JavaScript initialization!
+        salt = Nonces.Salt,
+        requestType = "payment",
+        requestId = ViewBag.RequestID,
+        amount = Model.OrderTotal,
+        postbackUrl = Shared.PostbackUrl,
+        preAuth = Shared.PreAuth,
+    };
+
+    string jsonReqVault = JsonConvert.SerializeObject(requestPayment);
+    string AuthKey = Shared.GetAuthKey(jsonReqVault, Shared.DeveloperKEY, Nonces.IV, Nonces.Salt);
+
+}
+
+
+<div class="checkout-data">
+    <div class="section payment-info">
+        <div class="info">
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label for="CreditCardNumber">
+                        PO Number:
+                    </label>
+                    <br>
+                    <input id="poNumber" name="poNumber" class="form-control" autocomplete="on">
+                </div>
+            </div>
+
+
+
+            @{
+        if (ViewBag.PayType == "Exempt")
+        {
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label for="CreditCardType">Payment Terms:</label>
+                    <select id="ddlTerms" class="dropdownlists form-control">
+                        <option selected="selected" value="">How would like to pay?</option>
+                        <option value="prepay">Pre-Pay</option>
+                        <option value="terms">Terms</option>
+                    </select>
+                </div>
+            </div>
+
+}
+            }
+
+            <div id="CCP">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="CreditCardNumber">
+                            Credit Card Number:
+                        </label>
+                        <br>
+                        <input id="ccNumber" name="ccNumber" data-vtpick="0" class="form-control" autocomplete="on">
+
+                        <button id="btnCCVault" class="btn btn-info ccVault hidden" data-toggle="modal" data-target="#ccVault">Display CC Vault</button>
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <span style="font-size:28px;"><i id="cc_img"></i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label for="CreditCardExpire">Expiration Date on Card:</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-2">
+                        <select id="ccExpMonth" class="form-control">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-6 col-sm-2">
+                        <select id="ccExpYear" class="form-control">
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 form-group">
+                        <label for="SecurityCode">Security Code:</label>
+                        <input id="ccCVV" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label>Save Credit Card Info?</label>
+                        <input id="ccStore" type="checkbox" class="" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 form-group">
+                        <button id="btnProcessPayment" class="btn btn-success hidden" >Process Order</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-2 form-group">
+                <button id="btnProcessTerms" class="btn btn-success hidden">Process Order</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------- CC VAULT EMAIL MODAL STARTS HERE ------------------------------------------->
+<div id="ccVault" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Credit Card Vault</h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="creditCards" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th>Credit Card</th>
+                                    <th>Expiration Date</th>
+                                    <th>Card Type</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="ccNumbs">
+                                @for (int i = 0; i < Model.CreditCards.Count; i++)
+                                {
+                                    var creditCard = Model.CreditCards[i];
+                                    string cardType = creditCard.CardType;
+                                    string cardNumber = creditCard.CardNumber;
+
+                                    <tr data-c4=@cardNumber>
+                                        <td><input id="ccSelector" name="ccSelector" type="radio" /></td>
+                                        <td data-ct=@cardType.Substring(0, 1) data-c4=@cardNumber>************@cardNumber</td>
+                                        <td>@Html.Raw(creditCard.CardExpirationMonth)/@Html.Raw(creditCard.CardExpirationYear)</td>
+                                        <td>
+                                            <span style="font-size:28px;">
+                                                @switch (cardType.Substring(0, 1))
+                                                {
+                                                    case "A":
+                                                        <i class="fab fa-cc-amex"></i>
+                                                        break;
+                                                    case "V":
+                                                        <i class="fab fa-cc-visa"></i>
+                                                        break;
+                                                    case "M":
+                                                        <i class="fab fa-cc-mastercard"></i>
+                                                        break;
+                                                    case "D":
+                                                        <i class="fab fa-cc-discover"></i>
+                                                        break;
+                                                }
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href=#removeCC data-c4=@cardNumber class="removeCC"><i class='fa fa-trash'></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnSelCC" type="button" class="btn btn-success" data-dismiss="modal">Choose Selected</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!------------------------------------- CC VAULT EMAIL MODAL ENDS HERE ------------------------------------------->
+
+<br /><br />
+<div id="paymentResponse" class="alert alert-success" role="alert">
+    <p id="ccStatusMessage"></p>
+</div>
+
+<div class="wrapper text-center hidden">
+    <h1>Response Integrity</h1>
+    <p>The response headers returned from the API includes a hash of the body, which should be used to verify its integrity. This page runs a transaction upon loading; when you're ready, send it to the server for hash verification:</p>
+    <br />
+    <div>
+        <h5>Result:</h5>
+        <textarea id="txtPayResponse" style="font-family: monospace; width:100%;" rows="6"></textarea>
+        <br /><br />
+        <button class="btn btn-primary" id="verifyButton" disabled>Verify</button>
+        <br /><br />
+        <h5>Hash Verification:</h5>
+        <div class="compare">
+            <input type="text" class="form-control" id="clientHash" style="font-family: monospace; width:48%;" placeholder="">
+            <input type="text" class="form-control" id="serverHash" style="font-family: monospace; width:48%;" placeholder="">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // full api reference is available at https://github.com/SagePayments/PaymentsJS
+
+    // the entire library is accessed through the PayJS() function:
+
+    PayJS(['jquery', 'PayJS/Core', 'PayJS/Request', 'PayJS/Response', 'PayJS/Formatting', 'PayJS/Validation'],
+        function ($, $CORE, $REQUEST, $RESPONSE, $FORMATTING, $VALIDATION) { // ... and then assign them to variables.
+
+            // Original Initialize code here....
+
+            $("#btnProcessPayment").click(function (event) {
+                event.preventDefault();
+
+                var cc = $("#ccNumber").val();
+                var CCLast4 = cc.substr(cc.length - 4, 4);
+                var expm = $("#ccExpMonth").val();
+                var expy = $("#ccExpYear").val();
+                var cvv = $("#ccCVV").val();
+
+                var exp = expm + "/" + expy.substr(- 2);
+
+                /* Is CC from Vault? */
+                if ($("#ccNumber").attr("data-vtpick") == "0") {   
+                //================================================
+                //== New Card # Entered... doPayment.
+                //================================================
+
+                    // AJAX Call to retrieve requestID
+                    var dto = {
+                        CCLast4:    "----"
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "checkout/SageCCPayment_Vault_GetAuthKey",
+                        data: JSON.stringify(dto),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+
+                        success: okPayment
+
+                    });
+
+                    function okPayment(results) {
+                    //================================================
+                    //== Sage doPayment.
+                    //================================================
+                        console.log(results);
+
+                        $CORE.Initialize({  // when using REQUEST library, initialize via CORE instead of UI
+                                clientId: "@Shared.DeveloperID",
+                                merchantId: "@Shared.MerchantID",
+                                authKey: results.authKey,
+                                salt: results.salt,
+                                environment: "@Shared.Environment",
+                                requestType: "payment",
+                                requestId: results.requestID,
+                                postbackUrl: "@requestPayment.postbackUrl",
+                                amount: "@requestPayment.amount",
+                                debug: true
+                            });
+
+                        $REQUEST.doPayment(cc, exp, cvv, function (resp, status, jqxhr) {
+                            if ($RESPONSE.tryParse(resp, status, jqxhr)) {
+                                var gatewayResponse = $RESPONSE.getGatewayResponse();
+                                var apiResponse = $RESPONSE.getApiResponse();
+                                var responseHash = $RESPONSE.getResponseHash().hash;
+
+                                checkResponse(gatewayResponse, apiResponse, responseHash);
+
+                                if ($("#ccStore").prop("checked") && gatewayResponse.status == "Approved") {
+                                //================================================
+                                //== Accepted Payment; Now save in vault per user.
+                                //================================================
+                                    $REQUEST.doVault(cc, exp, function (resp, status, jqxhr) {
+                                        if ($RESPONSE.tryParse(resp, status, jqxhr)) {
+                                            var dto = {
+                                                OpCode: "INSERT",
+                                                CardToken: $RESPONSE.getVaultToken(),
+                                                CardType: cc[0],
+                                                CardNumber: CCLast4,
+                                                CardExpMonth: expm,
+                                                CardExpYear: expy
+                                            }
+
+                                            // AJAX Call to store token, last four, exp date in local database
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "checkout/SageCCPayment_Vault_Update",
+                                                data: JSON.stringify(dto),
+                                                dataType: "json",
+                                                contentType: "application/json; charset=utf-8",
+
+                                                success: okVaultLDB
+
+                                            });
+
+                                            var cardTypeImg = null;
+
+                                            function okVaultLDB(results) {
+                                                switch (dto.CardType) {
+                                                    case "3":
+                                                        cardTypeImg = "amex"
+                                                        break;
+                                                    case "4":
+                                                        cardTypeImg = "visa"
+                                                        break;
+                                                    case "5":
+                                                        cardTypeImg = "mastercard"
+                                                        break;
+                                                    case "6":
+                                                        cardTypeImg = "discover"
+                                                        break;
+                                                }
+
+                                                // Update Vault Modal...
+                                                $("#creditCards").append(
+                                                    "<tr data-c4='" + dto.CardNumber + "'>" +
+                                                    "   <td><input id='ccSelector' name='ccSelector' type='radio' /></td>" +
+                                                        "<td data-ct=" + dto.CardType + " data-c4=" + dto.CardNumber + ">************" + dto.CardNumber + "</td >" +
+                                                        "<td>" + dto.CardExpMonth + "/" + dto.CardExpYear + "</td >" +
+                                                        "<td>" +
+                                                            "<span style='font-size:28px;'><i class='fab fa-cc-" + cardTypeImg + "'></i></span>" +
+                                                        "</td>" +
+                                                    "</td>" +
+                                                    "<td>" +
+                                                            "<a href='#removeCC' data-c4='" + dto.CardNumber + "' class='removeCC'> <i class='fa fa-trash'></i></a > " +
+                                                        "</td>" +
+                                                "</tr>")
+
+                                                console.log(results);
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                            else { // Parse failed.
+                                checkResponse("99999", "N/A", "N/A");
+                            }
+                        });
+                    }
+
+                }
+                else {
+                    //================================================
+                    //== Card chosen from vault... doTokenPayment.
+                    //================================================
+
+                    //Make Ajax Call To Encrypt AuthKey -> GetAuthKey(javascriptRequest) onSuccess => {
+                    // Pass CCLast4
+                    var CCLast4 = $("#ccNumber").val();
+
+                        $.ajax({
+                            type: "POST",
+                            url: "checkout/SageCCPayment_Vault_GetAuthKey",
+                            data: "{'CCLast4':'" + CCLast4.substr(CCLast4.length-4,4) + "'}",
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+
+                            success: okVault
+
+                        });
+
+                        function okVault(results) {
+                        //================================================
+                        //== Retrieved AuthKey from local db.
+                        //== doTokenPayment.
+                        //================================================
+                            $CORE.Initialize({  // when using REQUEST library, initialize via CORE instead of UI
+                                clientId: "@Shared.DeveloperID",
+                                merchantId: "@Shared.MerchantID",
+                                authKey: results.authKey,
+                                salt: results.salt,
+                                environment: "@Shared.Environment",
+                                requestType: "payment",
+                                requestId: results.requestID,
+                                postbackUrl: "@requestPayment.postbackUrl",
+                                amount: "@requestPayment.amount",
+                                debug: true
+                            });
+
+                            $REQUEST.doTokenPayment(results.token, $("#ccCVV").val(), function (resp, status, jqxhr) {
+                                if ($RESPONSE.tryParse(resp, status, jqxhr)) {
+                                    var gatewayResponse = $RESPONSE.getGatewayResponse();
+                                    var apiResponse = $RESPONSE.getApiResponse();
+                                    var responseHash = $RESPONSE.getResponseHash().hash;
+
+                                    checkResponse(gatewayResponse, apiResponse, responseHash);
+
+                                }
+                                else { // Parse failed.
+                                    checkResponse("99999", "N/A", "N/A", "N/A");
+                               }
+
+                            });
+
+                        }
+
+                        $("#ccNumber").attr("data-vtpick", "0") // just in case they want to try a non vault card, should the other decline.
+                }
+            });
+        });
+
+
+    $(document).ready(function () {
+    //================================================
+    //== Prep page on load...
+    //================================================
+        $('.footer:eq(0)').hide();
+        $('.administration:eq(1)').hide();
+
+        if ($("#ddlTerms").length) {
+            // $("#exempt-submit").hide();
+            $("#CCP").hide();
+            $("#cc_error").addClass("hidden");
+            $("#paymentResponse").addClass("hidden");
+        }
+        else {
+            $("#CCP").show();
+            $("#btnProcessPayment").removeClass("hidden");
+        }
+
+        $("#ccNumber").blur(function () {
+            var cc = $("#ccNumber").val();
+            setCardImg(cc[0]);
+        });
+
+        // Display Vault button if cards exist...
+        var rowCount = $('#creditCards >tbody >tr').length;
+
+        if (rowCount > 0) {
+            $("#btnCCVault").removeClass("hidden");
+        }
+
+    });
+</script>
+
+<script type="text/javascript">
+    $('#ddlTerms').change(function () {
+    //================================================
+    //== Based on selection, either the Credit Card
+    //== or Terms panel will display.
+    //================================================
+
+        if ($("#ddlTerms option:selected").text() == "Pre-Pay") {
+            $("#CCP").show();
+            $("#btnProcessPayment").removeClass("hidden");
+            $("#btnProcessTerms").addClass("hidden");
+            // $("#exempt-submit").hide();
+        }
+
+        if ($("#ddlTerms option:selected").text() == "Terms") {
+            // $("#exempt-submit").show();
+            $("#CCP").hide();
+            $("#btnProcessTerms").removeClass("hidden");
+            $("#btnProcessPayment").addClass("hidden");
+        }
+
+        if ($("#ddlTerms option:selected").text() == "Payment Methods") {
+            $("#sageCCP").hide();
+            $("#exempt-submit").hide();
+        }
+
+    });
+</script>
+<script type="text/javascript">
+    //================================================
+    //== Displays CC VAULT Modal.
+    //== All CC'S on file (last 4) are displayed.
+    //================================================
+
+    $('.ccVault').on('click', function (e) {
+        e.preventDefault();
+    });
+
+</script>
+<script type="text/javascript">
+    $('#btnSelCC').on('click', function (e) {
+    //================================================
+    //== Select CC from vault.
+    //================================================
+
+        e.preventDefault();
+        $("#ccNumber").attr("data-vtpick", "1");
+
+        //$("#creditCards").click(function (event) {
+        //var tblCC = $("#creditCards");
+        // $("#ccNumbs").find("tr").each(function () {
+        $("#ccNumbs").find("tr").each(function () {
+            var row = $(this);
+            var $tds = $(this).find('td');
+
+            if (row.find('input[type="radio"]').is(':checked')) {
+                //formatCC($tds.eq(1).text());
+                formatCC($tds);
+
+                //$("#ccNumber").val($tds.eq(1).text())
+
+
+            }
+        });
+    });
+
+</script>
+<script type="text/javascript">
+    $(".removeCC").click(function () {
+    //================================================
+    //== Delete Order Modal:  Prpes it before display.
+    //================================================
+        var dto = {
+            OpCode: "DELETE",
+            CardToken: "N/A",
+            CardType: "N/A",
+            CardNumber: $(this).attr("data-c4"),
+            CardExpMonth: "N/A",
+            CardExpYear: "N/A"
+        }
+
+        if (confirm("Remove card ending in " + dto.CardNumber + " from the vault?")) {
+            $.ajax({
+                type: "POST",
+                url: "checkout/SageCCPayment_Vault_Update",
+                data: JSON.stringify(dto),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+
+                success: function (response) {
+                    $("#creditCards tr[data-c4='" + dto.CardNumber + "']").remove();
+                },
+                error: function (response) {
+                    if (onFailure != null) {
+                        onFailure(response, parseInt(response.status));
+                    } else {
+                        handleResponseError(response, parseInt(response.status));
+
+                    }
+                }
+            });
+        }
+        
+        // $("#btnDelOrderID").attr("data-id", creditCard);
+
+        //$(this).closest("tr").attr("data-id", creditCard);
+        //$("#removeModal").show();
+    });
+</script>
+
+
+<script>
+    function formatCC(tds) {
+    //================================================
+    //== Formats CC before display.
+    //================================================
+
+        var ctype = tds.eq(1).attr("data-ct");
+        var ccNumber4 = tds.eq(1).text();
+        var ccExpDate = tds.eq(2).text();
+        var ccExpMonth = ccExpDate.substr(0, 2);
+        var ccExpYear = ccExpDate.substr(-2);
+
+        $("#ccNumber").val(ccNumber4);
+        $("#ccExpMonth").val(ccExpMonth);
+        $("#ccExpYear").val("20" + ccExpYear);
+
+        $("#cc_img").removeClass();
+
+        setCardImg(ctype);
+    }
+</script>
+<script>
+    function setCardImg(ctype) {
+    //================================================
+    //== Set Card Image Type
+    //================================================
+
+        switch (ctype) {
+            case "A":
+            case "3":
+                $("#cc_img").addClass("fab fa-cc-amex")
+                break;
+            case "V":
+            case "4":
+                $("#cc_img").addClass("fab fa-cc-visa")
+                break;
+            case "M":
+            case "5":
+                $("#cc_img").addClass("fab fa-cc-mastercard")
+                break;
+            case "D":
+            case "6":
+                $("#cc_img").addClass("fab fa-cc-discover")
+                break;
+        }
+    }
+</script>
+<script>
+    function checkResponse(gatewayResponse, apiResponse, responseHash) {
+    //================================================
+    //== Checks the response.  If approved and hash 
+    //== checks out, OrderFinalProcessing will be called  
+    //== to complete the order.  Otherwise, system
+    //== message will be displayed.
+    //================================================
+
+        $("#txtPayResponse").text(apiResponse);
+        var editedResponse = $("#txtPayResponse").val();
+
+        $("#clientHash").val(responseHash);
+
+        var dto = {
+            request: editedResponse
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "checkout/Hash_Verify",
+            data: JSON.stringify(dto),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+
+            success: function (response) {
+                $("#serverHash").val(response.hash);
+
+                if ($("#serverHash").val() == $("#clientHash").val()) {  // Must be equal to trust the integrity of the response.
+                    switch (gatewayResponse.status) {
+                        case "Approved":  // Approved
+                            statusMsg = "APPROVED: Reference No - " + gatewayResponse.reference;
+                            $("#ccStatusMessage").text(statusMsg);
+                            $("#paymentResponse").removeClass("hidden");
+                            $("#paymentResponse").removeClass("alert-danger");
+                            $("#paymentResponse").addClass("alert-success");
+                            OrderFinalProcess(gatewayResponse.reference);
+                            break;
+                        case "Declined":  // Declined
+                            statusMsg = "DECLINED: Reference No - " + gatewayResponse.reference;
+                            $("#ccStatusMessage").text(statusMsg);
+                            $("#paymentResponse").removeClass("hidden");
+                            $("#paymentResponse").removeClass("alert-success");
+                            $("#paymentResponse").addClass("alert-danger");
+                            break;
+                        default:        // Processing Error
+                            statusMsg = "There was an issue processing your card; Please try again.   If problem persists, please call the Accounting Dept. 260.436.9100"
+                            $("#ccStatusMessage").text(statusMsg);
+                            $("#paymentResponse").removeClass("hidden");
+                            $("#paymentResponse").removeClass("alert-success");
+                            $("#paymentResponse").addClass("alert-danger");
+                            break;
+                    }
+                }
+                else {
+                    statusMsg = "Please call the Accounting Dept. 260.436.9100 to void the transaction.  There was an issue processing the card."
+                    $("#ccStatusMessage").text(statusMsg);
+                    $("#paymentResponse").removeClass("hidden");
+                    $("#paymentResponse").removeClass("alert-success");
+                    $("#paymentResponse").addClass("alert-danger");
+                }
+
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+</script>
+<script>
+    function OrderFinalProcess(refCode) {
+    //================================================
+    //== Adds Order, clears cart, then displays
+    //== the Completed page.
+    //================================================
+
+        var CCLast4 = $("#ccNumber").val();
+
+        if (CCLast4 == "") {
+            CCLast4 = "N/A";
+        }
+        else {
+            CCLast4 = CCLast4.substr(CCLast4.length - 4, 4)
+        }
+        var dto = {
+            poNumber: $("#poNumber").val(),
+            CCLast4: CCLast4,
+            referenceCode: refCode
+        }
+        
+        $.ajax({
+            type: "POST",
+            url: "checkout/OrderProcessingFinal",
+            data: JSON.stringify(dto),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+
+            success: function (results) {
+                //alert(results);
+                window.location = "checkout/completed/" + results;
+            },
+            error: function (response) {
+                console.log(response);
+            }
+
+        });
+
+    }
+</script>
+<script>
+    $("#btnProcessTerms").click(function (e) {
+    //================================================
+    //== Special dealers only can select terms.
+    //== (Delays payment requirement).
+    //================================================
+
+        e.preventDefault();
+        OrderFinalProcess("N/A");
+    });
+</script>

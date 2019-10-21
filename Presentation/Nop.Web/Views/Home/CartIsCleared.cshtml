@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+   //title
+    Html.AddTitleParts("Master Spas Parts");
+}
+
+    
+@Html.Partial("~/Views/Shared/header_nav.cshtml")
+
+    <!--<div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-md-6">
+                <a class="card" href="#">
+                    <h2>Accessories</h2>
+                    <img class="img-responsive" src="img/accessories.jpg">
+                    <p class="btn btn-info btn-lg">Take me there!</p>
+                </a>
+            </div>
+            <div class="col-sm-6 col-md-6">
+                <a class="card" href="#">
+                    <h2>Warranty Parts</h2>
+                    <img class="img-responsive" src="img/warranty-parts.jpg">
+                    <p class="btn btn-info btn-lg">Take me there!</p>
+                </a>
+            </div>
+        </div>
+    </div>-->
+    <div class="container" style="margin-top:40px;">
+    <div class="row ">
+        <div class="col-md-6" style="margin-top:80px;">
+            <h1 style="color:#00aad4;">Cart Has Been Emptied!</h1>
+            <p class="lead">We went ahead and put all your items back for you!<br>You're ready for a brand new shopping trip.</p>
+        </div>
+        <div class="col-md-6 text-center">
+            <img style="max-width:400px; display:block; margin:auto;" class="img-responsive" src="~/Images/empty-cart.png">
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/_FooterScriptTags.cshtml")
+    @Html.Widget("home_page_bottom")
+    </div>
+    
+   <script>
+        $('#myModal').modal();
+    </script>  

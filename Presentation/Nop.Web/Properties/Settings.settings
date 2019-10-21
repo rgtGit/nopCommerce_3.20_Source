@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Nop.Web.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Path_EmailConfirmatuon_Header" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Projects\Parts\nopCommerce_3.20_Source\Presentation\Nop.Web\Views\Checkout\EmailConfirmation_Header.html</Value>
+    </Setting>
+    <Setting Name="Path_EmailConfirmatuon_Detail" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Projects\Parts\nopCommerce_3.20_Source\Presentation\Nop.Web\Views\Checkout\EmailConfirmation_Detail.html</Value>
+    </Setting>
+    <Setting Name="Path_EmailConfirmatuon_Footer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Projects\Parts\nopCommerce_3.20_Source\Presentation\Nop.Web\Views\Checkout\EmailConfirmation_Footer.html</Value>
+    </Setting>
+    <Setting Name="Parts_ImagePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Projects\Parts\nopCommerce_3.20_Source\Presentation\Nop.Web\Content\Images\Thumbs\</Value>
+    </Setting>
+    <Setting Name="Parts_ImagePathProd" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://parts.masterspasportal.com/images/</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

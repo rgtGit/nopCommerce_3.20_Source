@@ -1,0 +1,152 @@
+﻿@model ShoppingCartModel
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.ShoppingCart;
+@{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+}
+           
+
+
+    
+    @if (Model.Items.Count > 0)
+    {
+
+        @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
+        using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            <div class="row">
+                    <div class="col-md-12">
+                       <div id="test@(Model.OrderReviewData.Display)" class="container">
+                        @if (!Model.OrderReviewData.Display) {
+                              
+                            <h2>Shopping Cart</h2>
+                            <p>Quantities can be changed by editing the number in the Quantity column. To remove an item, click the trash can located to the very left of the row you wish to remove.</p>
+                        }
+                        else {
+                    
+                            <h2>Cart Summary</h2>
+
+                        }
+
+                        <p>&nbsp;</p>
+                        <table id="orderDetails" class="table">
+                            <tr>
+                                @if (!Model.OrderReviewData.Display)
+                                {
+                                    <th></th>
+                                }
+                                <th>Item Number</th>
+                                <th>Item Description</th>
+                                <th>Quantity</th>
+
+                                @if (!Model.OrderReviewData.Display)
+                                {
+                                    <th></th>
+                                }
+                                <th style="text-align:right">Unit Price</th>
+                                <th data-id="hdrDiscount" style="text-align:right">Discount</th>
+                                <th style="text-align:right">Extension</th>
+                            </tr>
+
+            
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                @if (!Model.OrderReviewData.Display)
+                                {
+                                <td>
+                                    <input type="submit" name="removefromcart-@(item.Id)" value="@(item.Id)" class="trashItem" />
+                                </td>
+                                }
+                                <td>@item.Sku</td>
+                                <td>@item.ProductName</td>
+                                <td>
+                                    <div class="form-group">
+                                        @if (!Model.OrderReviewData.Display)
+                                        { 
+                                            <input name="itemquantity@(item.Id)" type="number" value="@(item.Quantity)" class="form-control" style="max-width:75px;" />
+                                        }
+                                        else
+                                        {
+                                            @item.Quantity
+                                        }
+                                    </div>
+                                </td>
+                                @if (!Model.OrderReviewData.Display)
+                                {
+                                    <td>
+                                        @* For testing....item.AvailableStock *@
+                                        @if (item.AvailableStock <= item.Quantity)
+                                        {
+                                        <img title="Not enough in stock; expect delays in shippment." src="~/Images/part-low-icon.png" />
+                                        }
+                                    </td>
+                                }
+                                <td style="text-align:right">@item.UnitPrice</td>
+                                <td data-id="itemDiscount" style="text-align:right">@item.Discount</td>
+                                <td style="text-align:right">@item.SubTotal</td>
+                            </tr>
+
+                        
+                    }
+                        </table>
+              
+
+                @if (Model.OrderReviewData.Display) {
+                    @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = false })
+
+                }
+                else {
+                    @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = true })
+                }
+             
+                
+        </div>
+     </div>
+      </div>  
+
+      }  
+    
+    }
+    
+    else
+    {
+        @T("ShoppingCart.CartIsEmpty")
+    }
+  
+    @Html.Partial("_OrderReviewData", Model.OrderReviewData)
+    <script>
+        $("#testid").removeClass('container');
+    </script>
+
+    <script>
+        /**********************************************************************/
+        /*  Checks to see if ALL the rows in the OrderDetail table have 0.00
+        /*  for the Discount.   If so, we need to remove the Dicount Header
+        /*  colunm as well as 0.00 rows so dealers that get dont't get discounts
+        /*  question it.
+        /**********************************************************************/
+        
+        var discountAmt = '$0.00';
+        var flag = false;
+        var discountTotal = 0;
+        $('#orderDetails').find('tr').each(function () {
+            $(this).find('td').each(function () {
+                if ($(this).attr("data-id") == "itemDiscount") {
+                    if ($(this).text() == discountAmt) {
+                        $(this).replaceWith("<td></td>");
+                        flag = true;
+                    }
+                    else {
+                        discountTotal += +($(this).text());
+                    }
+                }
+            });
+        });
+        if (discountTotal == 0) {
+            $("#orderDetails th[data-id='hdrDiscount'").html("<th></th>");
+        }
+    </script>
+    

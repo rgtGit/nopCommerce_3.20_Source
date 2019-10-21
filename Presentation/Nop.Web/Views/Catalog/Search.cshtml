@@ -1,0 +1,81 @@
+﻿@model SearchModel
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Search").Text);
+}
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Extensions;
+
+@Html.Partial("~/Views/Shared/header_nav.cshtml")
+
+
+
+
+        <div class="search-results">
+            @if (!String.IsNullOrEmpty(Model.Warning))
+            {
+                <strong class="warning">
+                    @Model.Warning
+                </strong>
+            }
+            @if (Model.NoResults)
+            {
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2>Search Results for @Model.Q</h2>
+                            <h3 style="border-bottom:solid thin #333;">Parts found: @Model.Products.Count</h3> 
+                            <p>&quot;Woops, there doesn't appear to be any parts found for your search. Try searching something different.&quot;</p>
+                        </div>
+                      </div>
+                </div>
+            }
+            
+
+            @if (Model.Products.Count > 0)
+            {
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                        <h2>Search Results for @Model.Q</h2>
+                        <p>Click the part number to view detailed information for the part.</p>
+                        <p><i>If a part is discontinued, Alternate Parts will be listed on the Part Detail Page.</i></p>
+                        <h3 style="border-bottom:solid thin #333;">Parts found: @Model.Products.Count</h3> 
+                            <table class="table">
+                                <tr>
+                                    <th></th>
+                                    <th>Part #</th>
+                                    <th>Part Name</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th></th>
+                                </tr>
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
+                        </table>
+                </div>
+                </div>
+           @{
+                var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc");
+                @pager
+                
+            }
+
+             </div>       
+            }
+ 
+        </div>
+        </div>    
+                
+            </div>
+        </div>
+    
+    @Html.Partial("~/Views/Shared/_FooterScriptTags.cshtml")
+    @Html.Widget("home_page_bottom")

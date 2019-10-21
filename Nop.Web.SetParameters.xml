@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <setParameter name="IIS Web Application Name" value="Default Web Site/MSPAS_OLORDERING" />
+  <setParameter name="nopCommerce_CoversEntities-Web.config Connection String" value="metadata=res://*/Models.Catalog.VinylColors.csdl|res://*/Models.Catalog.VinylColors.ssdl|res://*/Models.Catalog.VinylColors.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=RICKTAYLOR-PC2\SQLSVR2012_DEV;initial catalog=nopCommerce_Covers;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;" />
+  <setParameter name="Nop.Data.NopObjectContext-Web.config Connection String" value="Nop.Data.NopObjectContext_ConnectionString" />
+</parameters>

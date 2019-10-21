@@ -1,0 +1,279 @@
+﻿@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts("Master Spas Parts");
+}
+
+
+@Html.Partial("~/Views/Shared/header_nav.cshtml")
+
+<div class="container" style="margin-top:40px;">
+    <div class="row">
+        <div class="col-md-1 col-lg-2"></div>
+        <div class="col-md-10 col-lg-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><p>Order Filter</p></div>
+                <form>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Order Number </label>
+                                <div class="form-group">
+                                    <input type="text" id="orderNoStart" style="width:150px; display:inline-block;" class="form-control"  placeholder="Starting">
+                                    <input type="text" id="orderNoEnd" style="width:150px; display:inline-block;" class="form-control"  placeholder="Ending">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>Order Status/Type</label>
+                                <br/>
+                                <select id="orderType" class="form-control">
+                                    <option value="A">Active Orders</option>
+                                    <option value="C">Completed Orders</option>
+                                 </select>
+                            </div>
+                        </div>
+                        <p>&nbsp;</p>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Order Date </label>
+                                <div class="form-group">
+                                    <input type="date" id="orderDateStart" style="width:160px; display:inline-block;" class="form-control" placeholder="Starting">
+                                    <input type="date" id="orderDateEnd" style="width:160px; display:inline-block;" class="form-control" placeholder="Ending">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Last Ship Date </label>
+                                <div class="form-group">
+                                    <input type="date" id="shipDateStart" style="width:160px; display:inline-block;" class="form-control" placeholder="Starting">
+                                    <input type="date" id="shipDateEnd" orderNoStart style="width:160px; display:inline-block;" class="form-control" placeholder="Ending">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Customer PO Number</label>
+                                <div class="form-group">
+                                    <input id="poNumber" style="width:160px; display:inline-block;" type="text" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                    <div class="panel-footer">
+                        <p>
+                            <button id="btnClrFilter" class="btn btn-danger">Clear Filter</button>
+                            <button id="btnApplyFilter" class="btn btn-success">Apply Filter</button>
+
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-1 col-lg-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h3 id="filterCount" style="border-bottom:solid thin #333;"></h3>
+            <button id="prevPage" class="btn btn-primary hidden" disabled>&lt;</button>
+            <button id="nextPage" class="btn btn-primary hidden" data-pageoffset="0" data-pageNo="0">&gt;</button>
+            <table id="tblOrders" class="table"></table>
+
+
+        </div>
+
+        <div class="col-md-2"></div>
+
+    </div>
+    @Html.Partial("~/Views/Shared/_FooterScriptTags.cshtml")
+    @Html.Widget("home_page_bottom")
+</div>
+
+<script>
+    $(document).ready(function () {
+        var pageOffSet = 5;
+
+        $("#btnApplyFilter").on("click", function (e) {
+            e.preventDefault();
+
+            // First clear current table result set....
+            clearFilterResults(true);
+             
+
+            // AJAX to get orders based on Order Filter...
+            applyFilter("Apply", pageOffSet);
+            
+        });
+
+        $("#orderNoStart").blur(function () {
+            $("#orderNoEnd").val($("#orderNoStart").val());
+        });
+
+        $("#orderDateStart").blur(function () {
+            $("#orderDateEnd").val($("#orderDateStart").val());
+        });
+
+        $("#shipDateStart").blur(function () {
+            $("#shipDateEnd").val($("#shipDateStart").val());
+        });
+
+        $("#btnClrFilter").on("click", function (e) {
+            e.preventDefault();
+            $("#orderNoStart").val("");
+            $("#orderNoEnd").val("");
+            $("#orderDateStart").val("");
+            $("#orderDateEnd").val("");
+            $("#orderType").val([]);
+            $("#poNumber").val("");
+            $("#shipDateStart").val("");
+            $("#shipDateEnd").val("");
+
+            $("#filterCount").text("");
+            clearFilterResults(true);
+            
+            $("#tblOrders").empty();
+
+            $("#nextPage").attr("data-pageoffset", 0);
+        });
+        
+        $("#nextPage").on("click", function (e) {
+        // FF to next page...
+            e.preventDefault();
+            var nextOffSet = parseInt($("#nextPage").attr("data-pageoffset"));
+
+            if ($("#nextPage").attr("data-pageoffset") == 0) {
+                nextOffSet = pageOffSet;
+            }
+            else {
+                nextOffSet = nextOffSet + pageOffSet;
+            }
+
+            $("#nextPage").attr("data-pageoffset", nextOffSet.toString());
+            applyFilter("Next", pageOffSet);
+        });
+
+        
+        $("#prevPage").on("click", function (e) {
+        // Rewind to next page...
+            e.preventDefault();
+            var nextOffSet = parseInt($("#nextPage").attr("data-pageoffset"));
+            nextOffSet = nextOffSet - pageOffSet;
+            $("#nextPage").attr("data-pageoffset", nextOffSet);
+            applyFilter("Prev", pageOffSet);
+        });
+
+        $("#orderType").val([]);
+    });
+
+    function applyFilter(pageButton, pageOffSet) {
+        clearFilterResults(false);
+      
+        var dto = {
+            OrderNo_Start: ($("#orderNoStart").val() == "" ? null : $("#orderNoStart").val()),
+            OrderNo_End: ($("#orderNoEnd").val() == "" ? null : $("#orderNoEnd").val()),
+            OrderDate_Start: ($("#orderDateStart").val() == "" ? null : $("#orderDateStart").val()),
+            OrderDate_End: ($("#orderDateEnd").val() == "" ? null : $("#orderDateEnd").val()),
+            OrderType: ($("#orderType option:selected").val() == "" ? null : $("#orderType option:selected").val()),
+            PONumber: ($("#poNumber").val() == "" ? null : $("#poNumber").val()),
+            ShipDate_Start: ($("#shipDateStart").val() == "" ? null : $("#shipDateStart").val()),
+            ShipDate_End: ($("#shipDateEnd").val() == "" ? null : $("#shipDateEnd").val()),
+            PageOffSet: $("#nextPage").attr("data-pageoffset")
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "order/OrderFilter_Search",
+            data: JSON.stringify(dto),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (results) {
+                togglePagination(parseInt(results.length));
+
+                var pageNo;
+                var pageCount;
+                var searchCount;
+                var remainder;
+
+                if (pageButton == "Next" || pageButton == "Apply") {
+                    pageNo = parseInt($("#nextPage").attr("data-pageNo")) + 1;
+                }
+                else {
+                    pageNo = parseInt($("#nextPage").attr("data-pageNo")) - 1;
+                }
+                
+                $("#nextPage").attr("data-pageNo", pageNo);
+
+                searchCount = results[0].SearchCount;
+                remainder = (searchCount % pageOffSet);
+                pageCount = remainder > 0 ? parseInt(searchCount / 5) + 1 : parseInt(searchCount / pageOffSet);
+
+                if (pageNo == 1) {
+                    $("#prevPage").prop("disabled", true);
+                }
+                else {
+                    $("#prevPage").prop("disabled", false);
+                }
+
+                if (pageNo == pageCount) {
+                    $("#nextPage").prop("disabled", true);
+                }
+                else {
+                    $("#nextPage").prop("disabled", false);
+                }
+
+                $("#filterCount").text(searchCount + " Orders Matching Critera: Page " + pageNo + " of " + pageCount);
+
+                for (i = 0; i < results.length; i++) {
+                    $("#tblOrders").append(
+                        "<tr>" +
+                        "<th><a href='orderdetails/" + results[i].OrderNo + "'>" + results[i].OrderNo + "</a></th>" +
+                        "<th>" + results[i].OrderDate + "</th>" +
+                        "<th>" + results[i].OrderStatus + "</th>" +
+                        "<th>" + results[i].ShipDate + "</th>" +
+                        "</tr>"
+                    );
+
+                }
+
+                
+            },
+            error: function (results) {
+                console.log(results);
+
+            }
+
+        });
+
+    }
+
+    function clearFilterResults(resetPageNo) {
+        $("#tblOrders").empty();
+        $("#tblOrders").append(
+            "<tr class>" +
+            "<th>Order #</th>" +
+            "<th>Ordered</th>" +
+            "<th>Status</th>" +
+            "<th>Last Ship Date</th>" +
+            "</tr>"
+        );
+
+        if (resetPageNo) {
+            $("#nextPage").attr("data-pageNo", "0");
+        }
+
+        togglePagination(0);
+    }
+
+    function togglePagination(rowCount) {
+        if (rowCount > 0) {
+            $("#prevPage").removeClass("hidden");
+            $("#nextPage").removeClass("hidden");
+        }
+        else {
+            $("#prevPage").addClass("hidden");
+            $("#nextPage").addClass("hidden");
+        }
+    }
+</script>  

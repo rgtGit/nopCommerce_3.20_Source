@@ -1,0 +1,22 @@
+﻿@model ShoppingCartModel.OrderReviewDataModel
+@using Nop.Web.Models.ShoppingCart;
+@if (Model.Display)
+{
+
+    <div class="row">
+        <div class="col-md-6">
+		    <ul class="shipping-info list-group">
+			    <li class="title list-group-item list-group-item-info"> <strong>Ship To: (via - @Model.ShippingMethod)</strong> </li>
+    			<li class="name list-group-item">@Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName</li>
+    			<li class="address1 list-group-item">@Model.ShippingAddress.Address1 </li>
+    			<li class="city-state-zip list-group-item">@Model.ShippingAddress.Address2 </li>
+    			<li class="city-state-zip list-group-item">@Model.ShippingAddress.City </li>
+    			<li class="city-state-zip list-group-item">@Model.ShippingAddress.StateProvinceName </li>
+    			<li class="country list-group-item">@Model.ShippingAddress.CountryName </li>
+                <li class="email list-group-item">@T("Order.Email"): @Model.ShippingAddress.Email </li>
+    			<li class="phone list-group-item">@T("Order.Phone"): @Model.ShippingAddress.PhoneNumber </li>
+			    <li class="fax list-group-item">@T("Order.Fax"): @Model.ShippingAddress.FaxNumber </li>
+		    </ul>
+	    </div>
+    </div>
+}

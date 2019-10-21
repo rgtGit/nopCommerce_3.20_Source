@@ -1,0 +1,24 @@
+﻿@model ShippingDropModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.MinimumCharge):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MinimumCharge)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.PercentageOfSubTotal):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.PercentageOfSubTotal)
+        </td>
+    </tr>
+</table>
+            
+

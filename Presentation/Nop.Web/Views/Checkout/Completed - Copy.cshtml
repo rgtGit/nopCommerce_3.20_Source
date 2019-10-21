@@ -1,0 +1,22 @@
+﻿@model CheckoutCompletedModel
+@using Nop.Web.Models.Checkout;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+@Html.Partial("~/Views/Shared/header_nav.cshtml")
+ <div class="container">
+                <div class="row" id="congratulations">
+                    <div class="col-xs-12 col-md-12">
+                        <img class="img-responsive animated infinite pulse" src="~/Images/sign-check-icon.png" >
+                    </div>
+                    <div class="col-xs-12 col-md-12 animated bounceIn">
+                        <h2>Congratulations! Your order (#@Model.OrderId) has been placed successfully!</h2>
+                        <p>We will send an email to confirm your order details shortly.</p>
+                    </div>
+                </div>
+            </div>
+@Html.Partial("~/Views/Shared/_FooterScriptTags.cshtml")
+@Html.Widget("home_page_bottom")

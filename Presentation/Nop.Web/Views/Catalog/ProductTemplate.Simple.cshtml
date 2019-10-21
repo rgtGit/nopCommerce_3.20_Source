@@ -1,0 +1,142 @@
+﻿@model ProductDetailsModel
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Search").Text);
+
+    <!--var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(productUrl);
+    }-->
+}
+
+
+@{
+    //prepare "Add to cart" AJAX link
+    string addtocartlink = "";
+    var shoppingCartTypeId = 1;
+    var quantity = 999999;
+
+    addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = false });
+      
+}
+
+@Html.Partial("~/Views/Shared/header_nav.cshtml")
+
+
+<div class="container">
+<!--product breadcrumb-->
+@Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-responsive" width="300" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+                    </div>
+                    <div class="col-md-8">
+                        @{
+                            var PartName = Model.Name;
+                                
+                            if (Model.AddToCart.DisableBuyButton)
+                            {
+                                PartName = "Discontinued (NLA) - " + PartName;
+                            }
+                                
+                                
+                         }
+                        
+                        <h2>@PartName</h2>
+                        <h5>Part Number: @Model.Sku</h5>
+                        <p<>@Html.Raw(Model.FullDescription)</p>
+                        
+                        <div class="row">
+                        @{
+                            if (!Model.AddToCart.DisableBuyButton)
+                            { 
+                          
+                                <p>Unit of Measure: EA</p>
+                                
+                                    <div class="col-sm-6 col-md-6">
+                                        <table class="table">
+                                            <tr>
+                                        <!--<th>From Quantity</th>
+                                        <th>To Quantity</th>-->
+                                                <th>Unit Price</th>
+                                            </tr>
+                                            <tr>
+                                            <!--<td>1.00</td>
+                                            <td>Or Greater</td>-->
+                                            <td>@Model.ProductPrice.Price</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                }
+                            }
+                            @{
+                                if (!Model.AddToCart.DisableBuyButton)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Qty:</label>
+                                            @Html.TextBox("qty" + Model.Id, "1", new { @class = "form-control", @type = "number", @style = "max-width:160px;" })
+                                            <input type="button" value="Add to Cart" class="btn btn-success" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.Id'); return false;" />
+                                            <br />
+                                        </div>
+                                    </div>
+                                 }
+                            }
+
+                            <div class="col-sm-6 col-md-6">
+                                         @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    @Html.Partial("~/Views/Shared/_FooterScriptTags.cshtml")
+    @Html.Widget("home_page_bottom")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
